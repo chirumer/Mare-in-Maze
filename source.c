@@ -20,13 +20,13 @@ const char* assets_path = "./assets";
 
 // ---- function declarations ----
 
-void initialize(SDL_Window** window, SDL_Surface** window_surface);
+void initialize(SDL_Window** window, SDL_Renderer** window_renderer);
     // create window and surface
 
-void cleanup(SDL_Window** window, SDL_Surface** window_surface);
+void cleanup(SDL_Window** window, SDL_Renderer** window_renderer);
     // destroy window and exit SDL
     
-void show_instructions(SDL_Window* window, SDL_Surface* window_surface);
+void show_instructions(SDL_Window* window, SDL_Renderer* window_renderer);
     // display an instructions page
     
 // ---- main ----
@@ -46,33 +46,21 @@ int main(int argc, char* args[]) {
 	
     // initialize necessary things
     SDL_Window* window = NULL; 
-    SDL_Surface* window_surface = NULL;
-    initialize(&window, &window_surface);
+    SDL_Renderer* window_renderer = NULL;
+    initialize(&window, &window_renderer);
 
     // introduce user to game
-    show_instructions(window, window_surface);
+    show_instructions(window, window_renderer);
 
     // release resources
-    cleanup(&window, &window_surface);
+    cleanup(&window, &window_renderer);
 
     return EXIT_SUCCESS;
 }
 
 // ---- function definitions ----
 
-void show_instructions(SDL_Window* window, SDL_Surface* window_surface) {
-
-    SDL_FillRect(
-	window_surface,
-	NULL,
-	SDL_MapRGB(
-	    window_surface->format,
-	    0xFF,
-	    0xFF,
-	    0xFF
-	)
-    );
-    SDL_UpdateWindowSurface(window);
+void show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
 
     bool is_quit = false;
     while (!is_quit) {
@@ -88,7 +76,7 @@ void show_instructions(SDL_Window* window, SDL_Surface* window_surface) {
     }
 }
 
-void initialize(SDL_Window** window, SDL_Surface** window_surface) {
+void initialize(SDL_Window** window, SDL_Renderer** window_renderer) {
 
     // create our window
     *window = SDL_CreateWindow(
@@ -109,8 +97,8 @@ void initialize(SDL_Window** window, SDL_Surface** window_surface) {
 	exit(EXIT_FAILURE);
     }
 
-    *window_surface = SDL_GetWindowSurface(*window);
-    if (*window_surface == NULL) { // something went wrong
+    *window_renderer = SDL_CreateRenderer(*window, -1, 0);
+    if (*window_renderer == NULL) { // something went wrong
 
 	fprintf(
 	    stderr,
@@ -121,10 +109,11 @@ void initialize(SDL_Window** window, SDL_Surface** window_surface) {
     }
 }
 
-void cleanup(SDL_Window** window, SDL_Surface** window_surface) {
+void cleanup(SDL_Window** window, SDL_Renderer** window_renderer) {
 
     SDL_DestroyWindow(*window);
     *window = NULL;
-    *window_surface = NULL;
+    SDL_DestroyRenderer(*window_renderer);
+    *window_renderer = NULL;
     SDL_Quit();
 }
