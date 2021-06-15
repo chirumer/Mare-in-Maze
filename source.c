@@ -26,8 +26,9 @@ void initialize(SDL_Window** window, SDL_Renderer** window_renderer);
 void cleanup(SDL_Window** window, SDL_Renderer** window_renderer);
     // destroy window and exit SDL
     
-void show_instructions(SDL_Window* window, SDL_Renderer* window_renderer);
+bool show_instructions(SDL_Window* window, SDL_Renderer* window_renderer);
     // display an instructions page
+    // returns whether user has closed program
     
 // ---- main ----
 
@@ -50,7 +51,10 @@ int main(int argc, char* args[]) {
     initialize(&window, &window_renderer);
 
     // introduce user to game
-    show_instructions(window, window_renderer);
+    if (!show_instructions(window, window_renderer)) {
+	cleanup(&window, &window_renderer);
+	return EXIT_SUCCESS;
+    }
 
     // release resources
     cleanup(&window, &window_renderer);
@@ -60,7 +64,9 @@ int main(int argc, char* args[]) {
 
 // ---- function definitions ----
 
-void show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
+bool show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
+
+    bool is_exit = false;
 
     //  load and display instructions image
     SDL_Surface* image = SDL_LoadBMP("./assets/instructions.bmp");
@@ -69,19 +75,27 @@ void show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
     SDL_RenderCopy(window_renderer, texture, NULL, NULL);
     SDL_RenderPresent(window_renderer);
 
-    bool is_quit = false;
-    while (!is_quit) {
+    // wait until user press key
+    bool is_done = false;
+    while (!is_done) {
 
 	SDL_Event event;
+        SDL_WaitEvent(&event);
 	while (!SDL_PollEvent(&event)) {
 	    if (event.type == SDL_QUIT) {
-		fprintf(stderr, "quitting..");
-		is_quit = true;
+		fprintf(stderr, "quitting..\n");
+		is_done = true;
+		is_exit = true;
+		break;
+	    }
+	    else if (event.type == SDL_KEYUP) {
+		is_done = true;
 		break;
 	    }
 	}
     }
     SDL_DestroyTexture(texture);
+    return is_exit;
 }
 
 void initialize(SDL_Window** window, SDL_Renderer** window_renderer) {
