@@ -62,6 +62,13 @@ int main(int argc, char* args[]) {
 
 void show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
 
+    //  load and display instructions image
+    SDL_Surface* image = SDL_LoadBMP("./assets/instructions.bmp");
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(window_renderer, image);
+    SDL_FreeSurface(image);
+    SDL_RenderCopy(window_renderer, texture, NULL, NULL);
+    SDL_RenderPresent(window_renderer);
+
     bool is_quit = false;
     while (!is_quit) {
 
@@ -74,6 +81,7 @@ void show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
 	    }
 	}
     }
+    SDL_DestroyTexture(texture);
 }
 
 void initialize(SDL_Window** window, SDL_Renderer** window_renderer) {
