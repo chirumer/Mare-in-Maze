@@ -81,17 +81,29 @@ bool show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
 
 	SDL_Event event;
         SDL_WaitEvent(&event);
-	while (!SDL_PollEvent(&event)) {
-	    if (event.type == SDL_QUIT) {
+	switch(event.type) {
+	    case SDL_QUIT:
 		fprintf(stderr, "quitting..\n");
 		is_done = true;
 		is_exit = true;
 		break;
-	    }
-	    else if (event.type == SDL_KEYUP) {
+	    case SDL_KEYUP:
 		is_done = true;
 		break;
+	}
+	if (is_done) { break; }
+	while (!SDL_PollEvent(&event)) {
+	    switch(event.type) {
+		case SDL_QUIT:
+		    fprintf(stderr, "quitting..\n");
+		    is_done = true;
+		    is_exit = true;
+		    break;
+		case SDL_KEYUP:
+		    is_done = true;
+		    break;
 	    }
+	    if (is_done) { break; }
 	}
     }
     SDL_DestroyTexture(texture);
