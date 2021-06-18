@@ -4,6 +4,8 @@
  // SDL2 
 #include <SDL2/SDL_image.h>
  // for loading images other than bitmap
+#include <SDL2/SDL_mixer.h>
+// for playing sounds and music
 #include <stdio.h>
  // printf(), scanf()
 #include <stdlib.h>
@@ -37,12 +39,23 @@ bool show_instructions(SDL_Window* window, SDL_Renderer* window_renderer);
 int main(int argc, char* args[]) {
 
     // initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
 
         fprintf(
             stderr,
             "SDL_Init error: %s\n",
             SDL_GetError()
+        );
+        exit(EXIT_FAILURE);
+    } 
+
+    // initialize mixer
+    if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+
+        fprintf(
+            stderr,
+            "Mix_OpenAudio error: %s\n",
+            Mix_GetError()
         );
         exit(EXIT_FAILURE);
     }
@@ -69,6 +82,27 @@ int main(int argc, char* args[]) {
 bool show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
 
     bool is_exit = false;
+
+    // load sound and music
+    Mix_Music* background_music = Mix_LoadMUS("./assets/instructions.mp3");
+    if (background_music == NULL) {
+        printf(
+            stderr,
+            "Mix_LoadWAV error: %s\n",
+            Mix_GetError()
+        );
+        exit(EXIT_FAILURE);
+    }
+    Mix_Chunk* click_sound = Mix_LoadWAV("./assets/click.mp3");
+    if (click_sound == NULL) {
+        printf(
+            stderr,
+            "Mix_LoadWAV error: %s\n",
+            Mix_GetError()
+        );
+        exit(EXIT_FAILURE);
+    }
+    Mix_PlayMusic(background_music, -1);
 
     //  load and display instructions image
     SDL_Surface* image = IMG_Load("./assets/instructions.png");
@@ -98,11 +132,20 @@ bool show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
                 is_exit = true;
                 break;
             case SDL_KEYUP:
+                Mix_PlayChannel(-1, click_sound, 0);
                 is_done = true;
                 break;
         }
     }
+    Mix_HaltMusic();
     SDL_DestroyTexture(texture);
+
+    while (Mix_Playing(-1)) {
+        SDL_Delay(50);
+    }
+    Mix_FreeMusic(background_music);
+    Mix_FreeChunk(click_sound);
+
     return is_exit;
 }
 
@@ -155,5 +198,7 @@ void cleanup(SDL_Window** window, SDL_Renderer** window_renderer) {
     *window = NULL;
     SDL_DestroyRenderer(*window_renderer);
     *window_renderer = NULL;
+    Mix_Quit();
+    IMG_Quit();
     SDL_Quit();
 }
