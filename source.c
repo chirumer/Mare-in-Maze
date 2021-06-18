@@ -38,28 +38,6 @@ bool show_instructions(SDL_Window* window, SDL_Renderer* window_renderer);
 
 int main(int argc, char* args[]) {
 
-    // initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
-
-        fprintf(
-            stderr,
-            "SDL_Init error: %s\n",
-            SDL_GetError()
-        );
-        exit(EXIT_FAILURE);
-    } 
-
-    // initialize mixer
-    if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-
-        fprintf(
-            stderr,
-            "Mix_OpenAudio error: %s\n",
-            Mix_GetError()
-        );
-        exit(EXIT_FAILURE);
-    }
-
     // initialize necessary things
     SDL_Window* window = NULL;
     SDL_Renderer* window_renderer = NULL;
@@ -150,6 +128,28 @@ bool show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
 }
 
 void initialize(SDL_Window** window, SDL_Renderer** window_renderer) {
+
+    // initialize SDL
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+
+        fprintf(
+            stderr,
+            "SDL_Init error: %s\n",
+            SDL_GetError()
+        );
+        exit(EXIT_FAILURE);
+    } 
+
+    // initialize mixer
+    if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+
+        fprintf(
+            stderr,
+            "Mix_OpenAudio error: %s\n",
+            Mix_GetError()
+        );
+        exit(EXIT_FAILURE);
+    }
 
     // create our window
     *window = SDL_CreateWindow(
