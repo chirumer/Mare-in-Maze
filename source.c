@@ -7,7 +7,7 @@
 #include <SDL2/SDL_mixer.h>
 // for playing sounds and music
 #include <stdio.h>
- // printf(), scanf()
+ // fprintf(), scanf()
 #include <stdlib.h>
  // exit(), EXIT_FAILURE
 #include <stdbool.h>
@@ -64,7 +64,7 @@ bool show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
     // load sound and music
     Mix_Music* background_music = Mix_LoadMUS("./assets/instructions.mp3");
     if (background_music == NULL) {
-        printf(
+        fprintf(
             stderr,
             "Mix_LoadWAV error: %s\n",
             Mix_GetError()
@@ -73,7 +73,7 @@ bool show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
     }
     Mix_Chunk* click_sound = Mix_LoadWAV("./assets/click.mp3");
     if (click_sound == NULL) {
-        printf(
+        fprintf(
             stderr,
             "Mix_LoadWAV error: %s\n",
             Mix_GetError()
@@ -85,7 +85,7 @@ bool show_instructions(SDL_Window* window, SDL_Renderer* window_renderer) {
     //  load and display instructions image
     SDL_Surface* image = IMG_Load("./assets/instructions.png");
     if (image == NULL) {
-        printf(
+        fprintf(
             stderr,
             "IMG_Load error: %s\n",
             IMG_GetError()
