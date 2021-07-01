@@ -182,7 +182,7 @@ void update_view(SDL_Rect* view, SDL_Point player_position, int width, int heigh
         view->x = 0;
     }
     else if (player_position.x + 4 >= width) {
-        view->x = width - 9;
+        view->x = width - 10;
     }
     else {
         view->x = player_position.x - 5;
@@ -192,7 +192,7 @@ void update_view(SDL_Rect* view, SDL_Point player_position, int width, int heigh
         view->y = 0;
     }
     else if (player_position.y + 4 >= height) {
-        view->y = 0;
+        view->y = height - 10;
     }
     else {
         view->y = player_position.y - 5;
