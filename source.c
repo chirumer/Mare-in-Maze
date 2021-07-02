@@ -74,7 +74,8 @@ void draw_maze(SDL_Renderer* window_renderer, enum MAZE_CELL** maze, int maze_wi
 
 void draw_player(SDL_Renderer* window_renderer, SDL_Point player_position, SDL_Rect* view);
 
-void move_player(SDL_Point* player_position, enum MAZE_CELL** maze, SDL_Point movement);
+void move_player(SDL_Point* player_position, enum MAZE_CELL** maze, SDL_Point movement,
+        int maze_width, int maze_height);
 
 void update_view(SDL_Rect* view, SDL_Point player_position, int width, int height);
 
@@ -168,10 +169,30 @@ void draw_maze(SDL_Renderer* window_renderer, enum MAZE_CELL** maze, int maze_wi
     }
 }
 
-void move_player(SDL_Point* player_position, enum MAZE_CELL** maze, SDL_Point movement) {
+void move_player(SDL_Point* player_position, enum MAZE_CELL** maze, SDL_Point movement,
+        int maze_width, int maze_height) {
 
-    player_position->x += movement.x;
-    player_position->y += movement.y;
+    SDL_Point new_position = {
+        player_position->x + movement.x,
+        player_position->y + movement.y
+    };
+
+    // boundary condition
+    if (new_position.x < 0 || new_position.y < 0 
+            || new_position.x >= maze_width 
+            || new_position.y >= maze_height) {
+
+        return;
+    }
+
+    // wall condition
+    if (maze[new_position.x][new_position.y] == MAZE_WALL) {
+        return;
+    }
+
+    // change position
+    player_position->x = new_position.x;
+    player_position->y = new_position.y;
 }
 
 void update_view(SDL_Rect* view, SDL_Point player_position, int width, int height) {
@@ -259,7 +280,7 @@ bool start_game(SDL_Window* window, SDL_Renderer* window_renderer) {
                 break;
             case SDL_KEYUP:
                 if (event.key.keysym.sym == SDLK_DOWN) {
-                    move_player(&player_position, maze, (SDL_Point){0, +1});
+                    move_player(&player_position, maze, (SDL_Point){0, +1}, MAZE_WIDTH, MAZE_HEIGHT);
                     update_view(&view, player_position, MAZE_WIDTH, MAZE_HEIGHT);
                     Mix_PlayChannel(-1, click_sound, 0);
                     draw_maze(window_renderer, maze, MAZE_WIDTH, MAZE_HEIGHT, view);
@@ -267,7 +288,7 @@ bool start_game(SDL_Window* window, SDL_Renderer* window_renderer) {
                     SDL_RenderPresent(window_renderer);
                 }
                 else if (event.key.keysym.sym == SDLK_UP) {
-                    move_player(&player_position, maze, (SDL_Point){0, -1});
+                    move_player(&player_position, maze, (SDL_Point){0, -1}, MAZE_WIDTH, MAZE_HEIGHT);
                     update_view(&view, player_position, MAZE_WIDTH, MAZE_HEIGHT);
                     Mix_PlayChannel(-1, click_sound, 0);
                     draw_maze(window_renderer, maze, MAZE_WIDTH, MAZE_HEIGHT, view);
@@ -275,7 +296,7 @@ bool start_game(SDL_Window* window, SDL_Renderer* window_renderer) {
                     SDL_RenderPresent(window_renderer);
                 }
                 else if (event.key.keysym.sym == SDLK_RIGHT) {
-                    move_player(&player_position, maze, (SDL_Point){+1, 0});
+                    move_player(&player_position, maze, (SDL_Point){+1, 0}, MAZE_WIDTH, MAZE_HEIGHT);
                     update_view(&view, player_position, MAZE_WIDTH, MAZE_HEIGHT);
                     Mix_PlayChannel(-1, click_sound, 0);
                     draw_maze(window_renderer, maze, MAZE_WIDTH, MAZE_HEIGHT, view);
@@ -283,7 +304,7 @@ bool start_game(SDL_Window* window, SDL_Renderer* window_renderer) {
                     SDL_RenderPresent(window_renderer);
                 }
                 else if (event.key.keysym.sym == SDLK_LEFT) {
-                    move_player(&player_position, maze, (SDL_Point){-1, 0});
+                    move_player(&player_position, maze, (SDL_Point){-1, 0}, MAZE_WIDTH, MAZE_HEIGHT);
                     update_view(&view, player_position, MAZE_WIDTH, MAZE_HEIGHT);
                     Mix_PlayChannel(-1, click_sound, 0);
                     draw_maze(window_renderer, maze, MAZE_WIDTH, MAZE_HEIGHT, view);
