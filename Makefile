@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = source/main.c source/definitions/SDL_helpers.c source/definitions/parameters.c source/definitions/game_instructions.c source/definitions/game.c
+OBJS = source/main.c source/definitions/SDL_helpers.c source/definitions/parameters.c source/definitions/game_instructions.c source/definitions/game.c source/definitions/maze.c
 
 #CC specifies which compiler we're using
 CC = gcc
