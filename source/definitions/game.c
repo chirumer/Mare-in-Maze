@@ -5,7 +5,7 @@
 #include "maze.h"
 #include "parameters.h"
 
-void display_maze(struct Maze maze) {
+void debug_display_maze(struct Maze maze) {
 
     const char* wall = "██";
     const char* path = "  ";
@@ -47,7 +47,7 @@ bool start_game(SDL_Renderer* renderer) {
     struct Maze maze;
     create_maze(&maze, MAZE_WIDTH, MAZE_HEIGHT);
 
-    display_maze(maze);
+    debug_display_maze(maze);
 
     free_maze(&maze);
 
