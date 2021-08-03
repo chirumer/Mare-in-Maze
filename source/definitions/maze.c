@@ -74,7 +74,6 @@ void maze_explore(struct Maze* maze, struct Coord pos) {
     shuffle(incr, 4);
 
     // visit neighbors
-    int no_neighbors = 0;
     for (int i = 0; i < 4; ++i) {
 
         // neighbor coordinate

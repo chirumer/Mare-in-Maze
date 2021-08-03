@@ -95,6 +95,14 @@ SDL_Texture* load_texture(char* path, SDL_Renderer* renderer) {
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(
                                             renderer, image);
+    if (texture == NULL) {
+        // error
+
+        fprintf(stderr, "SDL_CreateTextureFromSUrface error: %s\n",
+                SDL_GetError());
+        exit(EXIT_FAILURE);
+    }
+
     SDL_FreeSurface(image);
     
     return texture;

@@ -13,4 +13,10 @@ extern char* INSTRUCTIONS_IMAGE_PATH;
 extern char* INSTRUCTIONS_MUSIC_PATH;
 extern char* CLICK_SOUND_PATH;
 
+extern char* WALL_IMAGE_PATH;
+extern char* PATH_IMAGE_PATH;
+extern char* START_IMAGE_PATH;
+extern char* END_IMAGE_PATH;
+extern char* VOID_IMAGE_PATH;
+
 #endif

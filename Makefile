@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = source/main.c source/definitions/SDL_helpers.c source/definitions/parameters.c source/definitions/game_instructions.c source/definitions/game.c source/definitions/maze.c
+OBJS = source/main.c source/definitions/SDL_helpers.c source/definitions/parameters.c source/definitions/game_instructions.c source/definitions/game.c source/definitions/maze.c source/definitions/game_helpers.c
 
 #CC specifies which compiler we're using
 CC = gcc
@@ -8,8 +8,8 @@ CC = gcc
 INC_DIR = source/declarations
 
 #COMPILER_FLAGS specifies the additional compilation options we're using
-# -w suppresses all warnings
-COMPILER_FLAGS = -w -I${INC_DIR}
+# -Wall includes all warnings
+COMPILER_FLAGS = -Wall -I${INC_DIR}
 
 #LINKER_FLAGS specifies the libraries we're linking against
 LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_mixer
