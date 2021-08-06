@@ -11,7 +11,10 @@ extern const int TILE_SIZE;
 
 extern char* INSTRUCTIONS_IMAGE_PATH;
 extern char* INSTRUCTIONS_MUSIC_PATH;
+
 extern char* CLICK_SOUND_PATH;
+
+extern char* GAME_MUSIC_PATH;
 
 extern char* WALL_IMAGE_PATH;
 extern char* PATH_IMAGE_PATH;

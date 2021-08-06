@@ -10,7 +10,10 @@ const int TILE_SIZE = 50;
 
 char* INSTRUCTIONS_IMAGE_PATH = "./assets/instructions.png";
 char* INSTRUCTIONS_MUSIC_PATH = "./assets/music1.mp3";
+
 char* CLICK_SOUND_PATH = "./assets/click.mp3";
+
+char* GAME_MUSIC_PATH = "./assets/music1.mp3";
 
 char* WALL_IMAGE_PATH = "./assets/wall.png";
 char* PATH_IMAGE_PATH = "./assets/path.png";
