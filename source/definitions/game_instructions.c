@@ -13,6 +13,7 @@ bool show_instructions(SDL_Renderer* renderer) {
     // load audio
     Mix_Music* music = load_music(INSTRUCTIONS_MUSIC_PATH);
     Mix_Chunk* click_sound = load_sound(CLICK_SOUND_PATH);
+    Mix_AllocateChannels(1);
 
     // play music
     Mix_PlayMusic(music, -1);
@@ -39,11 +40,17 @@ bool show_instructions(SDL_Renderer* renderer) {
                     // user wants to quit game
                 is_done = true;
                 is_exit = true;
+                Mix_PlayChannel(0, click_sound, 0);
+                    // play sound
                 break;
 
-            case SDL_KEYUP:
+            case SDL_KEYDOWN:
+                if (event.key.keysym.sym != SDLK_RETURN) {
+                    break;
+                        // only interested in return key
+                }
                 is_done = true;
-                Mix_PlayChannel(-1, click_sound, 0);
+                Mix_PlayChannel(0, click_sound, 0);
                     // play sound
                 break;
         }
@@ -51,15 +58,14 @@ bool show_instructions(SDL_Renderer* renderer) {
 
     // stop audio
     Mix_HaltMusic();
-    while (Mix_Playing(-1)) {
+    while (Mix_Playing(0)) {
         SDL_Delay(50);
+            // wait for click sound to finish
     }
 
-    // clean audio
+    // clean audio resources
     Mix_FreeMusic(music);
-    music = NULL;
     Mix_FreeChunk(click_sound);
-    click_sound = NULL;
 
     return !is_exit;
 }

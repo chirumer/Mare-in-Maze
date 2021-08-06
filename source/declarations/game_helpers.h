@@ -8,8 +8,11 @@ struct Coord {
     int y;
 };
 
-void init(SDL_Renderer* renderer);
+void init_resources(SDL_Renderer* renderer);
 // initialize game assets
+
+void destroy_resources();
+// destroy game assets
 
 void render_maze(SDL_Renderer* renderer, struct Maze maze, struct Coord player);
 // renders the maze

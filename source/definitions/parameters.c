@@ -14,6 +14,7 @@ char* INSTRUCTIONS_MUSIC_PATH = "./assets/music1.mp3";
 char* CLICK_SOUND_PATH = "./assets/click.mp3";
 
 char* GAME_MUSIC_PATH = "./assets/music1.mp3";
+char* PLAYER_MOVE_SOUND_PATH = "./assets/click.mp3";
 
 char* WALL_IMAGE_PATH = "./assets/wall.png";
 char* PATH_IMAGE_PATH = "./assets/path.png";

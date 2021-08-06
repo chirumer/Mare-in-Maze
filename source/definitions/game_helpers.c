@@ -10,12 +10,20 @@ SDL_Texture* wall_texture;
 SDL_Texture* path_texture;
 SDL_Texture* void_texture;
 
-void init(SDL_Renderer* renderer) {
+void init_resources(SDL_Renderer* renderer) {
     wall_texture = load_texture(WALL_IMAGE_PATH, renderer);
     path_texture = load_texture(PATH_IMAGE_PATH, renderer);
     start_texture = load_texture(START_IMAGE_PATH, renderer);
     end_texture = load_texture(END_IMAGE_PATH, renderer);
     void_texture = load_texture(VOID_IMAGE_PATH, renderer);
+}
+
+void destroy_resources() {
+    SDL_DestroyTexture(wall_texture);
+    SDL_DestroyTexture(path_texture);
+    SDL_DestroyTexture(start_texture);
+    SDL_DestroyTexture(end_texture);
+    SDL_DestroyTexture(void_texture);
 }
 
 void render_maze_cell(SDL_Renderer* renderer, SDL_Rect dstrect, enum Maze_tile cell) {
