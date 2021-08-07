@@ -1,3 +1,6 @@
+#ifndef QUEUE_H
+#define QUEUE_H
+
 struct Queue {
     int size;
     struct Queue_node* head;
@@ -18,5 +21,10 @@ void queue_push(struct Queue*, void* data);
 void* queue_pop(struct Queue*);
     // pop data from front of queue
 
+void* queue_peek(struct Queue*);
+    // peek data from front of queue
+
 int queue_size(struct Queue*);
     // get size of queue
+
+#endif

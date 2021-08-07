@@ -21,3 +21,6 @@ char* PATH_IMAGE_PATH = "./assets/path.png";
 char* START_IMAGE_PATH = "./assets/start.png";
 char* END_IMAGE_PATH = "./assets/end.png";
 char* VOID_IMAGE_PATH = "./assets/void.png";
+
+char* PLAYER_IMAGE_PATH = "./assets/player.png";
+char* PLAYER_PTR_IMAGE_PATH = "./assets/player_ptr.png";

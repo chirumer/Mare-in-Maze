@@ -36,6 +36,10 @@ void* queue_pop(struct Queue* queue) {
     return data;
 }
 
+void* queue_peek(struct Queue* queue) {
+    return queue->head->data;
+}
+
 int queue_size(struct Queue* queue) {
     return queue->size;
 }

@@ -3,12 +3,15 @@
 #include "SDL_helpers.h"
 #include "parameters.h"
 #include "game_helpers.h"
+#include "queue.h"
 
 SDL_Texture* start_texture;
 SDL_Texture* end_texture;
 SDL_Texture* wall_texture;
 SDL_Texture* path_texture;
 SDL_Texture* void_texture;
+SDL_Texture* player_texture;
+SDL_Texture* player_ptr_texture;
 
 void init_resources(SDL_Renderer* renderer) {
     wall_texture = load_texture(WALL_IMAGE_PATH, renderer);
@@ -16,6 +19,8 @@ void init_resources(SDL_Renderer* renderer) {
     start_texture = load_texture(START_IMAGE_PATH, renderer);
     end_texture = load_texture(END_IMAGE_PATH, renderer);
     void_texture = load_texture(VOID_IMAGE_PATH, renderer);
+    player_texture = load_texture(PLAYER_IMAGE_PATH, renderer);
+    player_ptr_texture = load_texture(PLAYER_PTR_IMAGE_PATH, renderer);
 }
 
 void destroy_resources() {
@@ -24,6 +29,8 @@ void destroy_resources() {
     SDL_DestroyTexture(start_texture);
     SDL_DestroyTexture(end_texture);
     SDL_DestroyTexture(void_texture);
+    SDL_DestroyTexture(player_texture);
+    SDL_DestroyTexture(player_ptr_texture);
 }
 
 void render_maze_cell(SDL_Renderer* renderer, SDL_Rect dstrect, enum Maze_tile cell) {
@@ -90,7 +97,6 @@ void render_void_cell(SDL_Renderer* renderer, SDL_Rect dstrect) {
     SDL_RenderCopy(renderer, void_texture, &srcrect, &dstrect);
 }
 
-
 void debug_display_maze(struct Maze maze) {
 
     const char* wall = "██";
@@ -153,7 +159,7 @@ void render_maze(SDL_Renderer* renderer, struct Maze maze, struct Coord player) 
             SDL_Rect tile = { .x = x, .y = y, .w = TILE_SIZE, .h = TILE_SIZE };
 
             if (x >= maze_topleft.x && y >= maze_topleft.y
-                && x <= maze_bottomright.x && y <= maze_bottomright.y) {
+                && x < maze_bottomright.x && y < maze_bottomright.y) {
 
                 int j = ((y-top) - (maze_topleft.y - top))/TILE_SIZE;
                 int i = ((x-left) - (maze_topleft.x - left))/TILE_SIZE;
@@ -165,6 +171,56 @@ void render_maze(SDL_Renderer* renderer, struct Maze maze, struct Coord player) 
             }
         }
     }
+}
 
-    SDL_RenderPresent(renderer);
+void render_player_ptr(SDL_Renderer* renderer, struct Coord player, struct Coord ptr) {
+
+    struct Coord offset = { .x = player.x%TILE_SIZE, .y = player.y%TILE_SIZE };
+    struct Coord a_tile_no = { .x = player.x/TILE_SIZE, .y = player.y/TILE_SIZE };
+    struct Coord a_tile_coord = { .x = SCREEN_WIDTH/2 - TILE_SIZE/2 - offset.x,
+                                  .y = SCREEN_HEIGHT/2 - TILE_SIZE/2 - offset.y };
+
+    struct Coord maze_topleft = { .x = a_tile_coord.x - a_tile_no.x * TILE_SIZE,
+                                  .y = a_tile_coord.y - a_tile_no.y * TILE_SIZE };
+
+    struct Coord ptr_pos = { maze_topleft.x + ptr.x * TILE_SIZE,
+                       maze_topleft.y + ptr.y * TILE_SIZE };
+
+    SDL_Rect srcrect = { .x = 0, .y = 0, .w = TILE_SIZE, .h = TILE_SIZE };
+    SDL_Rect dstrect = { .x = ptr_pos.x, .y = ptr_pos.y, .w = TILE_SIZE, .h = TILE_SIZE };
+    SDL_RenderCopy(renderer, player_ptr_texture, &srcrect, &dstrect);
+}
+
+void move_player_animation(SDL_Renderer* renderer, struct Coord* animation_pos, struct Queue* movements) {
+
+    if (queue_size(movements) == 0) {
+        return;
+    }
+
+    struct Movement* next_move = queue_peek(movements);
+
+    int time = next_move->reach_in - SDL_GetTicks();
+
+    if (time <= 0) {
+        *animation_pos = next_move->dest;
+        queue_pop(movements);
+        return;
+    }
+
+    animation_pos->x += (next_move->dest.x - animation_pos->x)/time;
+    animation_pos->y += (next_move->dest.y - animation_pos->y)/time;
+
+    if (animation_pos->x == next_move->dest.x && 
+        animation_pos->y == next_move->dest.y) {
+        queue_pop(movements);
+    }
+}
+
+void render_player(SDL_Renderer*renderer) {
+
+    SDL_Rect srcrect = { .x = 0, .y = 0, .w = TILE_SIZE, .h = TILE_SIZE };
+    SDL_Rect dstrect = { .x = SCREEN_WIDTH/2 - TILE_SIZE/2, 
+                         .y = SCREEN_HEIGHT/2 - TILE_SIZE/2, 
+                         .w = TILE_SIZE, .h = TILE_SIZE };
+    SDL_RenderCopy(renderer, player_texture, &srcrect, &dstrect);
 }

@@ -23,4 +23,7 @@ extern char* START_IMAGE_PATH;
 extern char* END_IMAGE_PATH;
 extern char* VOID_IMAGE_PATH;
 
+extern char* PLAYER_IMAGE_PATH;
+extern char* PLAYER_PTR_IMAGE_PATH;
+
 #endif
