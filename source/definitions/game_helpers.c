@@ -39,3 +39,18 @@ void move_player(enum Direction direc, struct Maze maze,
         state->player_ptr = new_pos;
     }
 }
+
+
+bool blockables[NO_BLOCKABLES] = { false, false, false, false };
+
+bool is_blocked(enum Blockable x) {
+    return blockables[x];
+}
+
+void set_blocked(enum Blockable x) {
+    blockables[x] = true;
+}
+
+void unset_blocked(enum Blockable x) {
+    blockables[x] = false;
+}

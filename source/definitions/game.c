@@ -62,27 +62,73 @@ bool start_game(SDL_Renderer* renderer) {
                     switch (event.key.keysym.sym) {
 
                         case SDLK_RIGHT:
-                            audio_sound_play(SOUND_CLICK);
+
+                            // prevent sound overlap
+                            if (!is_blocked(BLOCKABLE_1)) {
+                                audio_sound_play(SOUND_CLICK);
+                                set_blocked(BLOCKABLE_1);
+                            }
+
                             move_player(RIGHT, maze, &game_state);
                             break;
 
                         case SDLK_LEFT:
-                            audio_sound_play(SOUND_CLICK);
+
+                            // prevent sound overlap
+                            if (!is_blocked(BLOCKABLE_2)) {
+                                audio_sound_play(SOUND_CLICK);
+                                set_blocked(BLOCKABLE_2);
+                            }
+
                             move_player(LEFT, maze, &game_state);
                             break;
 
                         case SDLK_UP:
-                            audio_sound_play(SOUND_CLICK);
+
+                            // prevent sound overlap
+                            if (!is_blocked(BLOCKABLE_3)) {
+                                audio_sound_play(SOUND_CLICK);
+                                set_blocked(BLOCKABLE_3);
+                            }
+
                             move_player(UP, maze, &game_state);
                             break;
 
                         case SDLK_DOWN:
-                            audio_sound_play(SOUND_CLICK);
+
+                            // prevent sound overlap
+                            if (!is_blocked(BLOCKABLE_4)) {
+                                audio_sound_play(SOUND_CLICK);
+                                set_blocked(BLOCKABLE_4);
+                            }
+
                             move_player(DOWN, maze, &game_state);
                             break;
 
                         default:
                             audio_sound_play(SOUND_ERROR);
+                    }
+                    break;
+
+                case SDL_KEYUP:
+
+                    switch(event.key.keysym.sym) {
+
+                        case SDLK_RIGHT:
+                            unset_blocked(BLOCKABLE_1);
+                            break;
+
+                        case SDLK_LEFT:
+                            unset_blocked(BLOCKABLE_2);
+                            break;
+
+                        case SDLK_UP:
+                            unset_blocked(BLOCKABLE_3);
+                            break;
+
+                        case SDLK_DOWN:
+                            unset_blocked(BLOCKABLE_4);
+                            break;
                     }
                     break;
             }
