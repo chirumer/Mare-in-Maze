@@ -33,8 +33,8 @@ void move_player(enum Direction direc, struct Maze maze,
 
     if (maze.cells[new_pos.y][new_pos.x] != MAZE_WALL) {
 
-        struct Cell_pos* node = malloc(sizeof(struct Cell_pos));
-        *node = new_pos;
+        struct Screen_coord* node = malloc(sizeof(struct Screen_coord));
+        *node = (struct Screen_coord){ new_pos.x*TILE_SIZE, new_pos.y*TILE_SIZE };
         queue_push(state->pending_movements, node);
         state->player_ptr = new_pos;
     }

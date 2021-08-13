@@ -10,6 +10,8 @@
 #include "debug.h"
 #include "constants.h"
 
+const int max_frame_rate = 200;
+
 bool start_game(SDL_Renderer* renderer) {
 
     bool is_exit = false;
@@ -33,7 +35,7 @@ bool start_game(SDL_Renderer* renderer) {
 
         // per frame actions
         modify_player_animation(&game_state);
-        graphics_render(renderer, maze, game_state);
+        graphics_render(renderer, maze, game_state, max_frame_rate);
         audio_toggle(game_state);
 
         // event handling
@@ -81,14 +83,12 @@ bool start_game(SDL_Renderer* renderer) {
 
                         default:
                             audio_sound_play(SOUND_ERROR);
-
-                            // DEBUG
-                            fprintf(stderr, "\n%d %d\n", game_state.player_ptr.x, game_state.player_ptr.y);
-                            debug_display_maze(maze);
                     }
                     break;
             }
         }
+        // give the CPU a break
+        SDL_Delay(10);
     }
 
     // clean resources

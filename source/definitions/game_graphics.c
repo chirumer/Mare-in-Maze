@@ -4,6 +4,7 @@
 #include "queue.h"
 #include "game_state.h"
 #include "constants.h"
+#include "math.h"
 #include "resource_paths.h"
 
 
@@ -37,6 +38,8 @@ struct Animation_state {
     SDL_Texture** frames;
 
 };
+
+const int DEFAULT_FRAME = 1;
 
 enum Direction {
     LEFT=0, RIGHT, UP, DOWN, NO_DIRECTIONS
@@ -273,6 +276,50 @@ void render_player(SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, player, NULL, &dstrect);
 }
 
+int walk_towards(struct Screen_coord* player, struct Screen_coord dest, int stamina) {
+
+    int distance_travelled;
+
+    if (player->x != dest.x) {
+        distance_travelled = stamina <= abs(dest.x - player->x) ? stamina :
+                                                                 abs(dest.x - player->x);
+        if (dest.x > player->x) {
+            player->x += distance_travelled;
+        }
+        else {
+            player->x -= distance_travelled;
+        }
+    }
+    else if (player->y != dest.y) {
+        distance_travelled = stamina <= abs(dest.y - player->y) ? stamina :
+                                                                 abs(dest.y - player->y);
+            if (dest.y > player->y) {
+                player->y += distance_travelled;
+            }
+            else {
+                player->y -= distance_travelled;
+            }
+    }
+
+    return stamina - distance_travelled;
+}
+
+enum Direction get_direction(struct Screen_coord player, struct Screen_coord dest) {
+
+    if (dest.x > player.x) {
+        return RIGHT;
+    }
+    else if (dest.x < player.x) {
+        return LEFT;
+    }
+    else if (dest.y > player.y) {
+        return DOWN;
+    }
+    else if (dest.y < player.y) {
+        return UP;
+    }
+    return -1;
+}
 
 
 // -------- export ---------
@@ -347,7 +394,29 @@ void graphics_destroy(void) {
     }
 }
 
-void graphics_render(SDL_Renderer* renderer, struct Maze maze, struct Game_state game_state) { 
+void graphics_render(SDL_Renderer* renderer, struct Maze maze, 
+                     struct Game_state game_state, int frame_rate) { 
+
+    // cap frame rate
+    static unsigned int last_render = 0;
+    if ((SDL_GetTicks() - last_render) <= 1000/frame_rate) {
+        return;
+    }
+    last_render = SDL_GetTicks();
+
+    // rerender only if required
+    static struct Screen_coord prev_animation_pos = { -1, -1 };
+    static struct Animation_state prev_animation_state;
+    if (prev_animation_pos.x == game_state.player_animation.x &&
+        prev_animation_pos.y == game_state.player_animation.y &&
+        prev_animation_state.current_frame_no == 
+        animation_state_player.current_frame_no &&
+        prev_animation_state.frames == animation_state_player.frames) {
+
+        return;
+    }
+    prev_animation_pos = game_state.player_animation;
+    prev_animation_state = animation_state_player;
 
     render_base(renderer, game_state.player_animation);
     render_fences(renderer, maze, game_state.player_animation);
@@ -357,9 +426,79 @@ void graphics_render(SDL_Renderer* renderer, struct Maze maze, struct Game_state
 }
 
 void modify_player_animation(struct Game_state* game_state) { 
-    game_state->player_animation = (struct Screen_coord){ game_state->player_ptr.x * TILE_SIZE,
-                                                         game_state->player_ptr.y * TILE_SIZE };
+
+    int inverse_speed = 10;
     if (queue_size(game_state->pending_movements)) {
-        queue_pop(game_state->pending_movements);
+        inverse_speed /= queue_size(game_state->pending_movements);
+    }
+
+    static unsigned int last_modify = 0;
+    int current_time = SDL_GetTicks();
+
+    if ((current_time - last_modify) <= inverse_speed) {
+        return;
+    }
+    int distance = (current_time - last_modify) / inverse_speed;
+    last_modify = current_time;
+
+    if (!queue_size(game_state->pending_movements)) {
+        animation_state_player.current_frame_no = DEFAULT_FRAME;
+        return;
+    }
+
+    enum Direction moving_direction;
+
+    for (int distance_left = distance; distance_left != 0;) {
+
+        struct Screen_coord queue_front = *(struct Screen_coord*)queue_peek(game_state->pending_movements);
+
+        moving_direction = get_direction(game_state->player_animation, queue_front);
+        distance_left = walk_towards(&game_state->player_animation,
+                                         queue_front,
+                                         distance);
+
+        if (distance_left != 0) {
+            queue_pop(game_state->pending_movements);
+
+            if(!queue_size(game_state->pending_movements)) {
+                break;
+            }
+        }
+    }
+
+    if (queue_size(game_state->pending_movements)) {
+        struct Screen_coord queue_front = *(struct Screen_coord*)queue_peek(game_state->pending_movements);
+
+        if (game_state->player_animation.x == queue_front.x &&
+            game_state->player_animation.y == queue_front.y) {
+
+            queue_pop(game_state->pending_movements);
+        }
+    }
+
+    int distance_per_frame = 10;
+
+    static int available_distance = 0;
+    available_distance += distance;
+
+    while (available_distance >= distance_per_frame) {
+
+        if (animation_state_player.current_frame_no ==
+            animation_state_player.no_frames - 1) {
+
+            animation_state_player.current_frame_no = 0;
+        }
+        else {
+            animation_state_player.current_frame_no++;
+        }
+
+        available_distance -= distance_per_frame;
+    }
+
+    if (animation_state_player.frames != horse1_frame_groups[moving_direction]) {
+        animation_state_player.current_frame_no = DEFAULT_FRAME;
+        animation_state_player.frames = horse1_frame_groups[moving_direction];
     }
 }
+
+
