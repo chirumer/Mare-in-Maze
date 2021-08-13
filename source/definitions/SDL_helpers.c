@@ -7,7 +7,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "SDL_helpers.h"
-#include "parameters.h"
+#include "constants.h"
 
 
 void initialize(SDL_Window** window, SDL_Renderer** renderer) {

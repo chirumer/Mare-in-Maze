@@ -22,7 +22,7 @@ void maze_explore(struct Maze* maze, struct Coord pos);
 
 //--------------- Interface function definitions ----------------
 
-void create_maze(struct Maze* maze, int width, int height) {
+void maze_create(struct Maze* maze, int width, int height) {
 
     assert(width % 2 && height % 2);
 
@@ -47,7 +47,7 @@ void create_maze(struct Maze* maze, int width, int height) {
     maze->cells[height-1][width-1] = MAZE_END;
 }
 
-void free_maze(struct Maze* maze) {
+void maze_destroy(struct Maze* maze) {
 
     for (int i = 0; i < maze->height; ++i) {
         free(maze->cells[i]);

@@ -6,6 +6,6 @@
 
 bool start_game(SDL_Renderer* renderer);
 // starts the game
-// returns value: false if user wants to quit
+// returns value: true if user wants to quit
 
 #endif

@@ -15,18 +15,18 @@ int main(int argc, char* args[]) {
     SDL_Renderer* renderer = NULL;
     initialize(&window, &renderer);
 
-    bool is_continue;
+    bool is_exit;
 
     // game instructions
-    is_continue = show_instructions(renderer);
-    if (!is_continue) {
+    is_exit = show_instructions(renderer);
+    if (is_exit) {
         cleanup(window, renderer);
         return EXIT_SUCCESS;
     }
 
     // the game
-    is_continue = start_game(renderer);
-    if (!is_continue) {
+    is_exit = start_game(renderer);
+    if (is_exit) {
         cleanup(window, renderer);
         return EXIT_SUCCESS;
     }

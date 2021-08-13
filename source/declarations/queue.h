@@ -15,6 +15,9 @@ struct Queue_node {
 struct Queue* queue_create();
     // create queue
 
+void queue_destroy(struct Queue*);
+    // destroy queue
+
 void queue_push(struct Queue*, void* data);
     // push data to end of queue
 
