@@ -6,6 +6,7 @@
 extern char* PATH_SOUND_CLICK_1;
 extern char* PATH_SOUND_ERROR_1;
 extern char* PATH_SOUND_PLAYER_MOVE;
+extern char* PATH_SOUND_WIN;
 
 extern char* PATH_MUSIC_INSTRUCTIONS;
 extern char* PATH_MUSIC_GAME;
@@ -42,5 +43,6 @@ extern char* PATH_IMAGE_HORSE1_RIGHT_3;
 extern char* PATH_IMAGE_HORSE1_UP_1;
 extern char* PATH_IMAGE_HORSE1_UP_2;
 extern char* PATH_IMAGE_HORSE1_UP_3;
+extern char* PATH_IMAGE_HAY;
 
 #endif

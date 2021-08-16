@@ -5,6 +5,7 @@
 char* PATH_SOUND_CLICK_1 = "./assets/audio/sounds/click.mp3";
 char* PATH_SOUND_ERROR_1 = "./assets/audio/sounds/error.mp3";
 char* PATH_SOUND_PLAYER_MOVE = "./assets/audio/sounds/horse_gallop.mp3";
+char* PATH_SOUND_WIN = "./assets/audio/sounds/win.mp3";
 
 char* PATH_MUSIC_INSTRUCTIONS = "./assets/audio/music/music1.mp3";
 char* PATH_MUSIC_GAME = "./assets/audio/music/music2.mp3";
@@ -24,6 +25,7 @@ char* PATH_IMAGE_GROUND_RIGHT = "./assets/graphics/base_tiles/base_6.png";
 char* PATH_IMAGE_GROUND_BOTTOMLEFT = "./assets/graphics/base_tiles/base_7.png";
 char* PATH_IMAGE_GROUND_BOTTOM = "./assets/graphics/base_tiles/base_8.png";
 char* PATH_IMAGE_GROUND_BOTTOMRIGHT = "./assets/graphics/base_tiles/base_9.png";
+char* PATH_IMAGE_HAY = "./assets/graphics/base_tiles/hay.png";
 
 char* PATH_IMAGE_FENCE_HORIZONTAL = "./assets/graphics/fences/horizontal.png";
 char* PATH_IMAGE_FENCE_VERTICAL = "./assets/graphics/fences/vertical.png";

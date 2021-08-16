@@ -40,6 +40,34 @@ void move_player(enum Direction direc, struct Maze maze,
     }
 }
 
+bool reached_goal(struct Game_state game_state) {
+
+    struct Screen_coord goal_topleft = { .x = (MAZE_WIDTH - 1) * TILE_SIZE,
+                                         .y = (MAZE_HEIGHT - 1) * TILE_SIZE };
+    struct Screen_coord goal_bottomright = { .x = goal_topleft.x + TILE_SIZE - 1,
+                                             .y = goal_topleft.y + TILE_SIZE - 1 };
+
+    struct Screen_coord player_topleft = game_state.player_animation;
+    struct Screen_coord player_bottomright = { .x = player_topleft.x + TILE_SIZE - 1,
+                                               .y = player_topleft.y + TILE_SIZE - 1 };
+
+    // top left of player has entered goal
+    if (player_topleft.x <= goal_bottomright.x &&
+        player_topleft.x >= goal_topleft.x &&
+        player_topleft.y <= goal_bottomright.y &&
+        player_topleft.y >= goal_topleft.y) {
+        return true;
+    }
+    // right of player has entered goal
+    if (player_bottomright.x <= goal_bottomright.x &&
+        player_bottomright.x >= goal_topleft.x &&
+        player_bottomright.y <= goal_bottomright.y &&
+        player_bottomright.y >= goal_topleft.y) {
+        return true;
+    }
+    return false;
+}
+
 
 bool blockables[NO_BLOCKABLES] = { false, false, false, false };
 

@@ -15,6 +15,8 @@ void display_loading(SDL_Renderer* renderer);
 void move_player(enum Direction direc, struct Maze maze,
                  struct Game_state* game_state);
 
+bool reached_goal(struct Game_state);
+
 enum Blockable {
     BLOCKABLE_1=0, BLOCKABLE_2, BLOCKABLE_3, BLOCKABLE_4,
     NO_BLOCKABLES

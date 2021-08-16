@@ -13,7 +13,7 @@
 enum BASE_TILE {
     GRASS=0, GROUND_TOPLEFT, GROUND_TOP, GROUND_TOPRIGHT, GROUND_LEFT,
     GROUND_CENTER, GROUND_RIGHT, GROUND_BOTTOMLEFT, GROUND_BOTTOM,
-    GROUND_BOTTOMRIGHT, NO_BASE_TILES
+    GROUND_BOTTOMRIGHT, GOAL, NO_BASE_TILES
 };
 SDL_Texture* base_tiles[NO_BASE_TILES];
 
@@ -267,6 +267,39 @@ void render_fences(SDL_Renderer* renderer, struct Maze maze, struct Screen_coord
     }
 }
 
+void render_others(SDL_Renderer* renderer, struct Screen_coord player) {
+
+    struct Screen_coord offset = { .x = player.x%TILE_SIZE, .y = player.y%TILE_SIZE };
+    struct Cell_pos a_tile_no = { .x = player.x/TILE_SIZE, .y = player.y/TILE_SIZE };
+    struct Screen_coord a_tile_coord = { .x = SCREEN_WIDTH/2 - TILE_SIZE/2 - offset.x,
+                                  .y = SCREEN_HEIGHT/2 - TILE_SIZE/2 - offset.y };
+
+    struct Screen_coord maze_topleft = { .x = a_tile_coord.x - a_tile_no.x * TILE_SIZE,
+                                  .y = a_tile_coord.y - a_tile_no.y * TILE_SIZE };
+    struct Screen_coord maze_bottomright = { .x = maze_topleft.x + (MAZE_WIDTH-1) * TILE_SIZE,
+                                      .y = maze_topleft.y + (MAZE_HEIGHT-1) * TILE_SIZE };
+
+    int left = a_tile_coord.x - ((a_tile_coord.x - 0)/TILE_SIZE)*TILE_SIZE
+                - ((a_tile_coord.x - 0)%TILE_SIZE != 0 ? TILE_SIZE : 0);
+    int top = a_tile_coord.y - ((a_tile_coord.y - 0)/TILE_SIZE)*TILE_SIZE
+               - ((a_tile_coord.y - 0)%TILE_SIZE != 0 ? TILE_SIZE : 0);
+    int right = a_tile_coord.x + ((SCREEN_WIDTH - (a_tile_coord.x + TILE_SIZE))/TILE_SIZE)*TILE_SIZE
+                 + ((SCREEN_WIDTH - (a_tile_coord.x + TILE_SIZE))%TILE_SIZE != 0 ? TILE_SIZE : 0);
+    int bottom = a_tile_coord.y + ((SCREEN_HEIGHT - (a_tile_coord.y + TILE_SIZE))/TILE_SIZE)*TILE_SIZE
+                  + ((SCREEN_HEIGHT - (a_tile_coord.y + TILE_SIZE))%TILE_SIZE != 0 ? TILE_SIZE : 0);
+
+    // render goal
+    int x = maze_bottomright.x;
+    int y = maze_bottomright.y;
+
+    if (x >= left && x <= right &&
+        y >= top && y <= bottom) {
+
+        SDL_Rect tile = { .x = x, .y = y, .w = TILE_SIZE, .h = TILE_SIZE };
+        render_cell(renderer, tile, base_tiles[GOAL]);
+    }
+}
+
 void render_player(SDL_Renderer* renderer) {
 
     SDL_Rect dstrect = { .x = SCREEN_WIDTH/2 - TILE_SIZE/2, 
@@ -338,6 +371,7 @@ void graphics_init(SDL_Renderer* renderer) {
     base_tiles[GROUND_BOTTOMLEFT] = load_texture(PATH_IMAGE_GROUND_BOTTOMLEFT, renderer);
     base_tiles[GROUND_BOTTOM] = load_texture(PATH_IMAGE_GROUND_BOTTOM, renderer);
     base_tiles[GROUND_BOTTOMRIGHT] = load_texture(PATH_IMAGE_GROUND_BOTTOMRIGHT, renderer);
+    base_tiles[GOAL] = load_texture(PATH_IMAGE_HAY, renderer);
 
     fences[FENCE_SINGLE] = load_texture(PATH_IMAGE_FENCE_SINGLE, renderer);
     fences[FENCE_HORIZONTAL] = load_texture(PATH_IMAGE_FENCE_HORIZONTAL, renderer);
@@ -420,6 +454,7 @@ void graphics_render(SDL_Renderer* renderer, struct Maze maze,
 
     render_base(renderer, game_state.player_animation);
     render_fences(renderer, maze, game_state.player_animation);
+    render_others(renderer, game_state.player_animation);
     render_player(renderer);
 
     SDL_RenderPresent(renderer);

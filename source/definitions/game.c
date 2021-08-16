@@ -37,6 +37,15 @@ bool start_game(SDL_Renderer* renderer) {
         modify_player_animation(&game_state);
         graphics_render(renderer, maze, game_state, max_frame_rate);
         audio_toggle(game_state);
+        if (reached_goal(game_state)) {
+
+            audio_music_stop();
+
+            audio_sound_play(SOUND_WIN);
+            audio_sound_await_end(SOUND_WIN);
+
+            break;
+        }
 
         // event handling
         SDL_Event event;

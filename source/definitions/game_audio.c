@@ -10,28 +10,27 @@
 Mix_Music* music;
 
 // sounds
-Mix_Chunk* click;
-Mix_Chunk* player_movement;
-Mix_Chunk* error;
+Mix_Chunk* sounds[NO_SOUNDS];
 
 void audio_init(void) {
     
     music = load_music(PATH_MUSIC_GAME);
 
-    click = load_sound(PATH_SOUND_CLICK_1);
-    player_movement = load_sound(PATH_SOUND_PLAYER_MOVE);
-    error = load_sound(PATH_SOUND_ERROR_1);
+    sounds[SOUND_CLICK] = load_sound(PATH_SOUND_CLICK_1);
+    sounds[SOUND_PLAYER_MOVEMENT] = load_sound(PATH_SOUND_PLAYER_MOVE);
+    sounds[SOUND_ERROR] = load_sound(PATH_SOUND_ERROR_1);
+    sounds[SOUND_WIN] = load_sound(PATH_SOUND_WIN);
     Mix_AllocateChannels(NO_SOUNDS);
 }
 
 void audio_destroy(void) {
 
-    Mix_FreeMusic(music);
-
-    Mix_FreeChunk(click);
-    Mix_FreeChunk(player_movement);
-    Mix_FreeChunk(error);
+    for (int i = 0; i < NO_SOUNDS; ++i) {
+        Mix_FreeChunk(sounds[i]);
+    }
     Mix_AllocateChannels(0);
+
+    Mix_FreeMusic(music);
 }
 
 void audio_music_start(void) {
@@ -43,25 +42,7 @@ void audio_music_stop(void) {
 }
 
 void audio_sound_play(enum SOUND sound_id) {
-
-    switch (sound_id) {
-
-        case SOUND_CLICK:
-            Mix_PlayChannel(SOUND_CLICK, click, 0);
-            break;
-
-        case SOUND_PLAYER_MOVEMENT:
-            Mix_PlayChannel(SOUND_PLAYER_MOVEMENT,
-                            player_movement, 0);
-            break;
-
-        case SOUND_ERROR:
-            Mix_PlayChannel(SOUND_ERROR, error, 0);
-            break;
-
-        default:
-            break;
-    }
+    Mix_PlayChannel(sound_id, sounds[sound_id], 0);
 }
 
 void audio_sound_stop(enum SOUND sound_id) {
