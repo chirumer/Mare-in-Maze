@@ -9,11 +9,13 @@ char* PATH_SOUND_WIN = "./assets/audio/sounds/win.mp3";
 
 char* PATH_MUSIC_INSTRUCTIONS = "./assets/audio/music/music1.mp3";
 char* PATH_MUSIC_GAME = "./assets/audio/music/music2.mp3";
+char* PATH_MUSIC_END_SCREEN = "./assets/audio/music/music3.mp3";
 
 
 // -- graphics paths --
 
 char* PATH_IMAGE_INSTRUCTIONS = "./assets/graphics/instructions.png";
+char* PATH_IMAGE_END_SCREEN = "./assets/graphics/end_screen.png";
 
 char* PATH_IMAGE_GRASS = "./assets/graphics/base_tiles/base_0.png";
 char* PATH_IMAGE_GROUND_TOPLEFT = "./assets/graphics/base_tiles/base_1.png";

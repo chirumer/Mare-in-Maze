@@ -10,11 +10,13 @@ extern char* PATH_SOUND_WIN;
 
 extern char* PATH_MUSIC_INSTRUCTIONS;
 extern char* PATH_MUSIC_GAME;
+extern char* PATH_MUSIC_END_SCREEN;
 
 
 // -- graphics paths --
 
 extern char* PATH_IMAGE_INSTRUCTIONS;
+extern char* PATH_IMAGE_END_SCREEN;
 
 extern char* PATH_IMAGE_GRASS;
 extern char* PATH_IMAGE_GROUND_TOPLEFT;

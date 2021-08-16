@@ -6,6 +6,7 @@
 #include "SDL_helpers.h"
 #include "game_instructions.h"
 #include "game.h"
+#include "game_end_screen.h"
 
 
 int main(int argc, char* args[]) {
@@ -26,6 +27,13 @@ int main(int argc, char* args[]) {
 
     // the game
     is_exit = start_game(renderer);
+    if (is_exit) {
+        cleanup(window, renderer);
+        return EXIT_SUCCESS;
+    }
+
+    // end screen
+    is_exit = show_end_screen(renderer);
     if (is_exit) {
         cleanup(window, renderer);
         return EXIT_SUCCESS;

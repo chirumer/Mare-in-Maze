@@ -41,6 +41,12 @@ void audio_music_stop(void) {
     Mix_HaltMusic();
 }
 
+void audio_sound_stop_all(void) {
+    for (int i = 0; i < NO_SOUNDS; ++i) {
+        Mix_HaltChannel(i);
+    }
+}
+
 void audio_sound_play(enum SOUND sound_id) {
     Mix_PlayChannel(sound_id, sounds[sound_id], 0);
 }

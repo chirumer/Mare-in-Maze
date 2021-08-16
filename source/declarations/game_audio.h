@@ -19,6 +19,8 @@ void audio_music_start(void);
 
 void audio_music_stop(void);
 
+void audio_sound_stop_all(void);
+
 void audio_sound_play(enum SOUND sound_id);
 
 void audio_sound_stop(enum SOUND sound_id);

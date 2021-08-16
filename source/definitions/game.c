@@ -39,6 +39,7 @@ bool start_game(SDL_Renderer* renderer) {
         audio_toggle(game_state);
         if (reached_goal(game_state)) {
 
+            audio_sound_stop_all();
             audio_music_stop();
 
             audio_sound_play(SOUND_WIN);
@@ -59,6 +60,7 @@ bool start_game(SDL_Renderer* renderer) {
                     is_done = true;
                     is_exit = true;
 
+                    audio_sound_stop_all();
                     audio_music_stop();
 
                     audio_sound_play(SOUND_CLICK);
